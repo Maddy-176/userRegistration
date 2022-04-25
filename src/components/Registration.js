@@ -7,9 +7,21 @@ function Registration() {
     const[email, setEmail]= useState("");
     const[tel_number, setTel]= useState();
     const [password, setPassowrd]= useState("");
+    const [cnfrmPswd, setConfrmPaswd]= useState("");
+    const [hasError, sethasError]= useState(false);
 
+    function confirmPassword(){
+        if(password!==cnfrmPswd){
+            sethasError(true);
+        }else{
+            sethasError(false);
+        }
+    }
+  
     function handleSubmit(e){
         e.preventDefault();
+        confirmPassword();
+       if(!hasError){
         fetch("http://localhost:5000/register",{
             method:"POST",
             headers:{
@@ -19,7 +31,8 @@ function Registration() {
                 first_name,last_name,user_name,email, tel_number,password
             })
         })            .then(result=>result.json())
-
+    }
+        
     }
   return (
     <div>
@@ -43,6 +56,10 @@ function Registration() {
         <div className='mt-3'>
         <input type="password" required={true} placeholder="Password" onChange={(e)=>setPassowrd(e.target.value)}/>
         </div>
+        <div className='mt-3'>
+        <input type="password" required={true} placeholder="Confirm Password" onChange={(e)=>setConfrmPaswd(e.target.value)}/>
+        </div>
+        {hasError?<div style={{color:"red"}}>Password donot match</div>:null}
         <div className='mt-3'>
         <button type="submit">Submit</button>
         </div>
